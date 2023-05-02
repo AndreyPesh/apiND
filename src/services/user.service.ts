@@ -2,7 +2,7 @@ import { User } from '../entities/user.entity';
 // import { CreateUserInput } from '../schemas/user.schema';
 import { AppDataSource } from '../utils/db/data-source';
 
-type CreateUserInput = { name: string; email: 'string', password: string };
+export type CreateUserInput = { name: string; email: string, password: string };
 
 const userRepository = AppDataSource.getRepository(User);
 

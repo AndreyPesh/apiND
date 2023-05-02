@@ -1,0 +1,30 @@
+{
+  "name": "apinode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start:prod": "npm run build && node ./dist/index.ts",
+    "start:build": "ts-node ./src/index.ts",
+    "start": "nodemon ./node_modules/nodemon/bin/nodemon.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndreyPesh/apiND.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndreyPesh/apiND/issues"
+  },
+  "homepage": "https://github.com/AndreyPesh/apiND#readme",
+  "dependencies": {
+    "@types/node": "^18.16.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

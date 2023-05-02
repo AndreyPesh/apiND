@@ -6,6 +6,7 @@ import { connectDB } from './utils/db/connectDB';
 import validateEnv from './utils/env/validateEnv';
 import { CONFIG } from './utils/env/enums';
 import { connectRedis } from './utils/redis/connectRedis';
+import './utils/jwt/signJwt'
 
 const PORT = config.get<number>(CONFIG.PORT);
 

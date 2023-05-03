@@ -9,6 +9,8 @@ import { ROUTE } from './routes/listRoutes';
 import config from 'config';
 import { CONFIG } from '../utils/env/enums';
 import AppError from '../utils/error/AppError';
+import { globalErrorHandler } from '../utils/error/errorHandler';
+import { STATUS_CODE } from '../types/enums';
 
 const app = express();
 
@@ -37,20 +39,10 @@ app.get(ROUTE.redis, async (req: Request, res: Response) => {
 });
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
-  next(new AppError(404, `Route ${req.originalUrl} not found`));
+  next(new AppError(STATUS_CODE.NOT_FOUND, `Route ${req.originalUrl} not found`));
 });
 
 // GLOBAL ERROR HANDLER
-app.use(
-  (error: AppError, req: Request, res: Response, next: NextFunction) => {
-    error.status = error.status || 'error';
-    error.statusCode = error.statusCode || 500;
-
-    res.status(error.statusCode).json({
-      status: error.status,
-      message: error.message,
-    });
-  }
-);
+app.use(globalErrorHandler);
 
 export default app;

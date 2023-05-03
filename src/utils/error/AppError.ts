@@ -1,9 +1,14 @@
+import { STATUS_CODE, STATUS_RESPONSE } from '../../types/enums';
+
 export default class AppError extends Error {
-  status: string;
+  status: STATUS_RESPONSE;
   isOperational: boolean;
-  constructor(public statusCode: number = 500, public message: string) {
+  constructor(
+    public statusCode: number = STATUS_CODE.INTERNAL_ERROR,
+    public message: string
+  ) {
     super(message);
-    this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
+    this.status = STATUS_RESPONSE.error;
     this.isOperational = true;
 
     Error.captureStackTrace(this, this.constructor);

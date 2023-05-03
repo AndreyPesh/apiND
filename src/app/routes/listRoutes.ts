@@ -1,5 +1,7 @@
 const BASE_ROUTE = '/api'
 
 export const enum ROUTE {
-  redis = BASE_ROUTE + '/healthchecker'
+  ALL = '*',
+  AUTH = BASE_ROUTE + '/auth',
+  USERS = BASE_ROUTE + '/users'
 }

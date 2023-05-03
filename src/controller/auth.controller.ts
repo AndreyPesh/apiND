@@ -8,10 +8,6 @@ import {
 import { User } from '../entities/user.entity';
 import AppError from '../utils/error/AppError';
 import { signTokens } from '../utils/jwt/signTokens';
-import {
-  accessTokenCookieOptions,
-  refreshTokenCookieOptions,
-} from '../utils/cookie/cookies';
 import { verifyJwt } from '../utils/jwt/verifyJwt';
 import { NameKeyPrivateToken, NameKeyPublicToken } from '../utils/jwt/types';
 import redisClient from '../utils/redis/connectRedis';
@@ -20,6 +16,11 @@ import config from 'config';
 import { CONFIG } from '../utils/env/enums';
 import { STATUS_CODE, STATUS_RESPONSE } from '../types/enums';
 import { ResponseServer } from '../types/types';
+import {
+  addCookieToResponse,
+  logout,
+  updateAccessToken,
+} from '../utils/cookie/helpers';
 
 export const registerUserHandler = async (
   req: Request<{}, {}, CreateUserInput>,
@@ -77,12 +78,7 @@ export const loginUserHandler = async (
     const { access_token, refresh_token } = await signTokens(user);
 
     // 3. Add Cookies
-    res.cookie('access_token', access_token, accessTokenCookieOptions);
-    res.cookie('refresh_token', refresh_token, refreshTokenCookieOptions);
-    res.cookie('logged_in', true, {
-      ...accessTokenCookieOptions,
-      httpOnly: false,
-    });
+    addCookieToResponse(res, access_token, refresh_token);
 
     // 4. Send response
     res.status(STATUS_CODE.OK).json({
@@ -147,11 +143,7 @@ export const refreshAccessTokenHandler = async (
     );
 
     // 4. Add Cookies
-    res.cookie('access_token', access_token, accessTokenCookieOptions);
-    res.cookie('logged_in', true, {
-      ...accessTokenCookieOptions,
-      httpOnly: false,
-    });
+    updateAccessToken(res, access_token);
 
     // 5. Send response
     res.status(STATUS_CODE.OK).json({
@@ -161,12 +153,6 @@ export const refreshAccessTokenHandler = async (
   } catch (err: unknown) {
     next(err);
   }
-};
-
-const logout = (res: ResponseServer) => {
-  res.cookie('access_token', '', { maxAge: -1 });
-  res.cookie('refresh_token', '', { maxAge: -1 });
-  res.cookie('logged_in', '', { maxAge: -1 });
 };
 
 export const logoutHandler = async (

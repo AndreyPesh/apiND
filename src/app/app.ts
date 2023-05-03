@@ -4,7 +4,6 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/auth.routes';
 import userRouter from './routes/user.routes';
-import redisClient from '../utils/redis/connectRedis';
 import { ROUTE } from './routes/listRoutes';
 import config from 'config';
 import { CONFIG } from '../utils/env/enums';
@@ -27,19 +26,17 @@ app.use(
   })
 );
 
-app.use('/api/auth', authRouter);
-app.use('/api/users', userRouter);
+app.use(ROUTE.AUTH, authRouter);
+app.use(ROUTE.USERS, userRouter);
 
-app.get(ROUTE.redis, async (req: Request, res: Response) => {
-  const message = await redisClient.get('try');
-  return res.status(200).send({
-    status: 'success',
-    message,
-  });
-});
-
-app.all('*', (req: Request, res: Response, next: NextFunction) => {
-  next(new AppError(STATUS_CODE.NOT_FOUND, STATUS_RESPONSE.ERROR, `Route ${req.originalUrl} not found`));
+app.all(ROUTE.ALL, (req: Request, res: Response, next: NextFunction) => {
+  next(
+    new AppError(
+      STATUS_CODE.NOT_FOUND,
+      STATUS_RESPONSE.ERROR,
+      `Route ${req.originalUrl} not found`
+    )
+  );
 });
 
 // GLOBAL ERROR HANDLER

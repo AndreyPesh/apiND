@@ -1,17 +1,19 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request } from 'express';
 import { findUserById } from '../services/user.service';
 import AppError from '../utils/error/AppError';
 import { verifyJwt } from '../utils/jwt/verifyJwt';
 import { NameKeyPublicToken } from '../utils/jwt/types';
 import redisClient from '../utils/redis/connectRedis';
+import { ResponseServer } from '../types/types';
+import { STATUS_CODE, STATUS_RESPONSE } from '../types/enums';
 
 export const deserializeUser = async (
   req: Request,
-  res: Response,
+  res: ResponseServer,
   next: NextFunction
 ) => {
   try {
-    let access_token;
+    let access_token: string = '';
 
     if (
       req.headers.authorization &&
@@ -23,7 +25,13 @@ export const deserializeUser = async (
     }
 
     if (!access_token) {
-      return next(new AppError(401, 'You are not logged in'));
+      return next(
+        new AppError(
+          STATUS_CODE.UNAUTHORIZED,
+          STATUS_RESPONSE.FAIL,
+          'You are not logged in'
+        )
+      );
     }
 
     // Validate the access token
@@ -33,28 +41,46 @@ export const deserializeUser = async (
     );
 
     if (!decoded) {
-      return next(new AppError(401, `Invalid token or user doesn't exist`));
+      return next(
+        new AppError(
+          STATUS_CODE.UNAUTHORIZED,
+          STATUS_RESPONSE.FAIL,
+          `Invalid token or user doesn't exist`
+        )
+      );
     }
 
     // Check if the user has a valid session
     const session = await redisClient.get(decoded.sub);
 
     if (!session) {
-      return next(new AppError(401, `Invalid token or session has expired`));
+      return next(
+        new AppError(
+          STATUS_CODE.UNAUTHORIZED,
+          STATUS_RESPONSE.FAIL,
+          `Invalid token or session has expired`
+        )
+      );
     }
 
     // Check if the user still exist
     const user = await findUserById(JSON.parse(session).id);
 
     if (!user) {
-      return next(new AppError(401, `Invalid token or session has expired`));
+      return next(
+        new AppError(
+          STATUS_CODE.UNAUTHORIZED,
+          STATUS_RESPONSE.FAIL,
+          `Invalid token or session has expired`
+        )
+      );
     }
 
     // Add user to res.locals
     res.locals.user = user;
 
     next();
-  } catch (err: any) {
+  } catch (err: unknown) {
     next(err);
   }
 };

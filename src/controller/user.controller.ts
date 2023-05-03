@@ -1,20 +1,22 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request } from 'express';
+import { ResponseServer } from '../types/types';
+import { STATUS_CODE, STATUS_RESPONSE } from '../types/enums';
 
 export const getMeHandler = async (
   req: Request,
-  res: Response,
+  res: ResponseServer,
   next: NextFunction
 ) => {
   try {
     const user = res.locals.user;
 
-    res.status(200).status(200).json({
-      status: 'success',
+    res.status(STATUS_CODE.OK).json({
+      status: STATUS_RESPONSE.SUCCESS,
       data: {
         user,
       },
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     next(err);
   }
 };

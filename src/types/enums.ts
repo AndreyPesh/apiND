@@ -1,6 +1,7 @@
 export const enum STATUS_RESPONSE {
-  error = 'error',
-  success = 'success'
+  ERROR = 'error',
+  FAIL = 'fail',
+  SUCCESS = 'success'
 }
 
 export const enum STATUS_CODE {
@@ -8,6 +9,8 @@ export const enum STATUS_CODE {
   UNAUTHORIZED = 401,
   FORBIDDEN = 403,
   NOT_FOUND = 404,
+  CONFLICT = 409,
   INTERNAL_ERROR = 500,
-  OK = 200
+  OK = 200,
+  CREATED = 201
 }

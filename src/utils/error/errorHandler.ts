@@ -9,7 +9,7 @@ export const globalErrorHandler = (
   res: ResponseServer,
   next: NextFunction
 ) => {
-  error.status = error.status || STATUS_RESPONSE.error;
+  error.status = error.status || STATUS_RESPONSE.ERROR;
   error.statusCode = error.statusCode || STATUS_CODE.INTERNAL_ERROR;
 
   res.status(error.statusCode).json({

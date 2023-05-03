@@ -10,7 +10,7 @@ import config from 'config';
 import { CONFIG } from '../utils/env/enums';
 import AppError from '../utils/error/AppError';
 import { globalErrorHandler } from '../utils/error/errorHandler';
-import { STATUS_CODE } from '../types/enums';
+import { STATUS_CODE, STATUS_RESPONSE } from '../types/enums';
 
 const app = express();
 
@@ -39,7 +39,7 @@ app.get(ROUTE.redis, async (req: Request, res: Response) => {
 });
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
-  next(new AppError(STATUS_CODE.NOT_FOUND, `Route ${req.originalUrl} not found`));
+  next(new AppError(STATUS_CODE.NOT_FOUND, STATUS_RESPONSE.ERROR, `Route ${req.originalUrl} not found`));
 });
 
 // GLOBAL ERROR HANDLER

@@ -1,6 +1,5 @@
 import { NextFunction, Request } from 'express';
 import {
-  CreateUserInput,
   createUser,
   findUserByEmail,
   findUserById,
@@ -21,6 +20,7 @@ import {
   logout,
   updateAccessToken,
 } from '../utils/cookie/helpers';
+import { CreateUserInput } from '../utils/validate/user.schema';
 
 export const registerUserHandler = async (
   req: Request<{}, {}, CreateUserInput>,

@@ -35,7 +35,8 @@
       "pg": "^8.4.0",
       "redis": "^4.6.6",
       "reflect-metadata": "^0.1.13",
-      "typeorm": "0.3.15"
+      "typeorm": "0.3.15",
+      "zod": "^3.21.4"
    },
    "devDependencies": {
       "@types/bcrypt": "^5.0.0",
